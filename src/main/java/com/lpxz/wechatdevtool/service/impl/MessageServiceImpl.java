@@ -61,13 +61,13 @@ public class MessageServiceImpl implements MessageService {
                 switch (eventType) {
                     case MessageUtil.EVENT_TYPE_SUBSCRIBE:
                         //文本消息
-                    /*TextMessage text = new TextMessage();
-                    text.setContent("我不管，我最美！！");
-                    text.setToUserName(fromUserName);
-                    text.setFromUserName(toUserName);
-                    text.setCreateTime(new Date().getTime());
-                    text.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
-                    respMessage = MessageUtil.textMessageToXml(text);*/
+//                        TextMessage text = new TextMessage();
+//                        text.setContent("我不管，我最美！！");
+//                        text.setToUserName(fromUserName);
+//                        text.setFromUserName(toUserName);
+//                        text.setCreateTime(new Date().getTime());
+//                        text.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
+//                        respMessage = MessageUtil.textMessageToXml(text);
 
                         //对图文消息
                         NewsMessage newmsg = new NewsMessage();
@@ -81,8 +81,8 @@ public class MessageServiceImpl implements MessageService {
                         Article article = new Article();
                         article.setTitle("我是一个图文");
                         article.setDescription("我是描述信息");
-                        article.setPicUrl("https://sfault-avatar.b0.upaiyun.com/110/007/1100070317-5abcb09d42224_huge256");
-                        article.setUrl("https://segmentfault.com/u/panzi_5abcaf30a5e6b");
+                        article.setPicUrl("https://lpxz.oss-cn-zhangjiakou.aliyuncs.com/XuSong_avatar.jpg");
+                        article.setUrl("https://segmentfault.com/u/lpxz");
                         articleList.add(article);
                         // 设置图文消息个数
                         newmsg.setArticleCount(articleList.size());
