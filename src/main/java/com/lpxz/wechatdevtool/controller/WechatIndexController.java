@@ -1,5 +1,8 @@
 package com.lpxz.wechatdevtool.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lpxz.wechatdevtool.entity.People;
+import com.lpxz.wechatdevtool.mapper.PeopleMapper;
 import com.lpxz.wechatdevtool.service.MessageService;
 import com.lpxz.wechatdevtool.utils.SignUtil;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * WechatPublicAccount
@@ -27,6 +31,12 @@ public class WechatIndexController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WechatIndexController.class);
     @Autowired
     private MessageService messageService;
+
+    private final PeopleMapper peopleMapper;
+
+    public WechatIndexController(PeopleMapper peopleMapper) {
+        this.peopleMapper = peopleMapper;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public void get(HttpServletRequest request, HttpServletResponse response) {
@@ -72,5 +82,15 @@ public class WechatIndexController {
         }
     }
 
-
+    @RequestMapping("/test")
+    public String test() {
+        // test
+        QueryWrapper<People> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", 1);
+        People people1 = peopleMapper.selectOne(wrapper);
+        String name = people1.getNickName();
+        System.out.println(name);
+        System.out.println(people1);
+        return name;
+    }
 }

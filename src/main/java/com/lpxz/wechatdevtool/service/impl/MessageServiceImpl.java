@@ -1,5 +1,8 @@
 package com.lpxz.wechatdevtool.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lpxz.wechatdevtool.entity.People;
+import com.lpxz.wechatdevtool.mapper.PeopleMapper;
 import com.lpxz.wechatdevtool.message.Article;
 import com.lpxz.wechatdevtool.message.NewsMessage;
 import com.lpxz.wechatdevtool.message.TextMessage;
@@ -23,6 +26,12 @@ import java.util.Map;
 public class MessageServiceImpl implements MessageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageServiceImpl.class);
 
+    private final PeopleMapper peopleMapper;
+
+    public MessageServiceImpl(PeopleMapper peopleMapper) {
+        this.peopleMapper = peopleMapper;
+    }
+
     @Override
     public String newMessageRequest(HttpServletRequest request) {
         String respMessage = null;
@@ -32,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
             assert requestMap != null;
             // 发送方帐号（open_id）
             String fromUserName = requestMap.get("FromUserName");
-            // 公众帐号
+            // 公众账号
             String toUserName = requestMap.get("ToUserName");
             // 消息类型
             String msgType = requestMap.get("MsgType");
@@ -47,7 +56,14 @@ public class MessageServiceImpl implements MessageService {
                 }*/
                 // 自动回复
                 TextMessage text = new TextMessage();
-                text.setContent("赵梦颖说：" + content);
+
+                // test
+                QueryWrapper<People> wrapper = new QueryWrapper<>();
+                wrapper.eq("id", 1);
+                People people1 = peopleMapper.selectOne(wrapper);
+                String name = people1.getNickName();
+
+                text.setContent("您的微信号是：" + fromUserName + "  " + name + "\n您发送的内容是：" + content);
                 text.setToUserName(fromUserName);
                 text.setFromUserName(toUserName);
                 text.setCreateTime(new Date().getTime());
@@ -56,11 +72,11 @@ public class MessageServiceImpl implements MessageService {
             }
             // 事件推送
             else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
-                String eventType = requestMap.get("Event");// 事件类型
-                // 订阅
+                String eventType = requestMap.get("Event"); // 事件类型
                 switch (eventType) {
+                    // 订阅
                     case MessageUtil.EVENT_TYPE_SUBSCRIBE:
-                        //文本消息
+                        // 文本消息
 //                        TextMessage text = new TextMessage();
 //                        text.setContent("我不管，我最美！！");
 //                        text.setToUserName(fromUserName);
@@ -69,13 +85,13 @@ public class MessageServiceImpl implements MessageService {
 //                        text.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
 //                        respMessage = MessageUtil.textMessageToXml(text);
 
-                        //对图文消息
-                        NewsMessage newmsg = new NewsMessage();
-                        newmsg.setToUserName(fromUserName);
-                        newmsg.setFromUserName(toUserName);
-                        newmsg.setCreateTime(new Date().getTime());
-                        newmsg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
-                        newmsg.setFuncFlag(0);
+                        // 图文消息
+                        NewsMessage newsMessage = new NewsMessage();
+                        newsMessage.setToUserName(fromUserName);
+                        newsMessage.setFromUserName(toUserName);
+                        newsMessage.setCreateTime(new Date().getTime());
+                        newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+                        newsMessage.setFuncFlag(0);
                         List<Article> articleList = new ArrayList<>();
 
                         Article article = new Article();
@@ -85,11 +101,11 @@ public class MessageServiceImpl implements MessageService {
                         article.setUrl("https://segmentfault.com/u/lpxz");
                         articleList.add(article);
                         // 设置图文消息个数
-                        newmsg.setArticleCount(articleList.size());
+                        newsMessage.setArticleCount(articleList.size());
                         // 设置图文消息包含的图文集合
-                        newmsg.setArticles(articleList);
+                        newsMessage.setArticles(articleList);
                         // 将图文消息对象转换成xml字符串
-                        respMessage = MessageUtil.newsMessageToXml(newmsg);
+                        respMessage = MessageUtil.newsMessageToXml(newsMessage);
 
                         break;
                     // TODO 取消订阅后用户再收不到公众号发送的消息，因此不需要回复消息
