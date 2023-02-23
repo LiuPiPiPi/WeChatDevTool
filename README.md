@@ -1,6 +1,6 @@
 # WeChat Development Tool
 
-微信公众号开发者工具 Java 示例代码
+微信公众号 开发者集成 Java 功能示例
 
 **详细说明请参见 [微信公众平台开发官方文档](https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html)**
 
